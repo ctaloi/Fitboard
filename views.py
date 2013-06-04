@@ -1,6 +1,6 @@
 import fitbit
 from flask import render_template, flash, redirect, session, url_for, request, jsonify
-from app import app, db
+from app import app, db, stathat
 from models import User
 from random import choice
 from flask_oauth import OAuth
@@ -20,6 +20,7 @@ fitbit_app = oauth.remote_app(
 
 @app.route('/')
 def index():
+    stathat.count('Fitboard_Hits', 1)
     return render_template('intro.html')
 
 
