@@ -82,9 +82,6 @@ def get_user(user_id):
     """Get stored fitbit auth for specified user"""
 
     user = User.query.filter_by(user_id=user_id).first_or_404()
-    flash(user.user_id)
-    flash(user.user_key)
-    flash(user.user_secret)
     return render_template('base.html')
 
 

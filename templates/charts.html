@@ -22,9 +22,9 @@ You need to be logged in to see charts
 <hr>
 <div class="row-fluid">
   <div class="span2">
-    <img src="http://www.fitbit.com/images/profile/defaultProfile_100_male.gif" alt="Image">
+    <img src="{{ session.user_profile.user.avatar }}" class="img-polaroid" alt="Image">
   </div>
-  <div class="span10">
+  <div class="span4">
     <h2>{{ session.user_profile.user.displayName }}'s FitBit Summary</h2>
     <ul>
       <li>Battery Level: {{ session.device_info.0.battery }}</li>
@@ -36,23 +36,21 @@ You need to be logged in to see charts
 <hr>
 
 <div class="row-fluid">
-  <div class="span10">
+  <div class="span3">
     <h3><span class="fui-arrow-right"></span> Group Charts</h3>
     <h4>Activity Level</h4>
     <div class="btn-toolbar">
       <div class="btn-group">
 
         {% for period, disp_period in timeseries %}
-        <a class="btn btn-info" href="panicboard://?url={{ url_for('get_levelsummary', _external=True, user_id=session.fitbit_keys.0, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
+        <a class="btn" href="panicboard://?url={{ url_for('get_levelsummary', _external=True, user_id=session.fitbit_keys.0, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
         {% endfor %}
 
       </div>
     </div>
   </div>
-  </div>
 
-<div class="row-fluid">
-  <div class="span5">
+  <div class="span3 offset2">
     <h3><span class="fui-arrow-right"></span>Individual Charts</h3>
 
     {% for chart, chart_name in individual_charts %}
@@ -62,7 +60,7 @@ You need to be logged in to see charts
     <div class="btn-group">
 
         {% for period, disp_period in timeseries %}
-        <a class="btn btn-info" href="panicboard://?url={{ url_for('get_activity', _external=True, user_id=session.fitbit_keys.0, resource=chart, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
+        <a class="btn" href="panicboard://?url={{ url_for('get_activity', _external=True, user_id=session.fitbit_keys.0, resource=chart, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
         {% endfor %}
 
     </div>
