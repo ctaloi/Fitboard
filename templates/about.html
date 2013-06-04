@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% set active_page = "about" %}
+{% block about %}
+<div class="row-fluid">
+  <div class="span10">
+  <h2>About Fitboard</h2>
+    <dl>
+      <dt>What is a Fitbit?</dt>
+      <dd>The Fitbit Tracker is a wireless-enabled wearable device that measures data such as the number of steps walked, quality of sleep, and other personal metrics.</dd>
+
+      <dt>What is Status Board</dt>
+      <dd>Status Board is an awesome data visulaization iPad app developed by the talented folks at<a href="http://panic.com" class="href">Panic</a></dd>
+
+      <dt>How does this work?</dt>
+      <dd>Fitboard connects your Fitbit to your Status Board using the Fitbit provided API.  Fitbit provides your data to Fitboard using the secure, open standard <a href="http://oauth.net" class="href">OAUTH</a>.  At anytime you can revoke Fitboard's <a href="http://www.fitbit.com/user/profile/apps" class="href">access</a> and remove the stored OAUTH tokens from Fitboard (your graphs will stop working).</dd>
+
+      <dt>Who are you?</dt>
+      <dd><a href="http://twitter.com/ctaloi" class="href">Chris Aloi</a> I'm a Telecom Engineer, husband and father who likes Fitbit and Status board.  The project is a learning experience built to scratch my own itch.</dd>
+
+      <dt>Feedback</dt>
+      <dd>Sure... Let me know what you like and what's bugging you - Hit me up on <a href="http://twitter.com/fitboardme" class="href">Twitter</a> or <a href="http://github.com/ctaloi" class="href">Github</a></dd>
+
+      <dt>Source and Tools</dt>
+      <dd><ul>
+        <li>The Fitboard source is available on <a href="http://github.com/ctaloi" class="href">Github</a>.  Fork it!</li>
+        <li>Written in Python using the awesome microframework <a href="http://http://flask.pocoo.org" class="href">Flask</a> under <a href="http://gunicorn.org" class="href">Gunicorn</a> hosted by <a href="http://heroku.com" class="href">Heroku</a> and a VPS at <a href="http://www.chicagovps.net" class="href">Chicago VPS</a></li></ul>
+    </dd>
+  </dl>
+</div>
+</div>
+</div>
+{% endblock %}

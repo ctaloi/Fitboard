@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+    <title>Fitboard</title>
+    <meta name="viewport" content="width=720px, initial-scale=1.0">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/flat-ui.css') }}">
+</head>
+
+{% set navigation_bar = [
+    ('/charts', 'charts', 'Charts'),
+    ('/about', 'about', 'About')
+] -%}
+{% set active_page = active_page|default('intro') -%}
+
+<body>
+  <div class="container">
+    <div class="navbar navbar">
+      <div class="navbar-inner">
+        <a href="{{ url_for('intro') }}" class="brand"><span class="fui-heart"> Fitboard</span></a>
+        <ul class="nav">
+          {%- for href, id, caption in navigation_bar -%}
+          <li{% if id == active_page %} class="active"{% endif %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+
+
+{% block intro %}
+{% endblock %}
+
+{% block about %}
+{% endblock %}
+
+{% block charts %}
+{% endblock %}
+
+
+
+<hr>
+  <div class="span10">
+    {% if not session.fitbit_keys %}
+    <a href="{{ url_for('login') }}" class="btn"><span class="fui-user"></span>Login</a></div>
+    {% else %}
+    <a href="{{ url_for('logout') }}" class="btn"><span class="fui-user"></span>Logout</a></div>
+    {% endif %}
+    </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/jquery-1.8.3.min.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/jquery-ui-1.10.3.custom.min.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/jquery.ui.touch-punch.min.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/bootstrap-select.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/bootstrap-switch.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/flatui-checkbox.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/flatui-radio.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/jquery.tagsinput.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/jquery.placeholder.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/jquery.stacktable.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/application.js') }}"> </script>
+
+    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+  </body>
+</html>
