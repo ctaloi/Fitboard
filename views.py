@@ -18,14 +18,19 @@ fitbit_app = oauth.remote_app(
 )
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
 @app.route('/')
 def index():
-    stathat.count('Fitboard_Hits', 1)
     return render_template('intro.html')
 
 
 @app.route('/about')
 def about():
+    stathat.count('fitboard_about', 1)
     return render_template('about.html')
 
 
@@ -90,16 +95,15 @@ def drop_user(user_id):
     """Get stored fitbit auth for specified user"""
 
     user = User.query.filter_by(user_id=user_id).first_or_404()
-
     db.session.delete(user)
     db.session.commit()
-
     check_user = User.query.filter_by(user_id=user_id).first()
 
     if check_user is None:
         flash('Successfully Deleted Account')
         session.pop('fitbit_keys', None)
-        flash('You are logged out')
+        session.pop('user_profile', None)
+        session.pop('device_info', None)
 
     return redirect(url_for('index'))
 

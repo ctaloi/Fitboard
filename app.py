@@ -11,14 +11,6 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 
 stathat = StatHat()
-stathat = StatHat(app)
+stathat.init_app(app)  # or stathat = StatHat(app)
 
-toolbar = DebugToolbarExtension(app)
-
-ADMINS = ['ctaloi@gmail.com']
-# if not app.debug:
-mail_handler = SMTPHandler('127.0.0.1',
-                           'fitboard@fitboard.me',
-                           ADMINS, 'FitBoard Failed')
-mail_handler.setLevel(logging.ERROR)
-app.logger.addHandler(mail_handler)
+# toolbar = DebugToolbarExtension(app)

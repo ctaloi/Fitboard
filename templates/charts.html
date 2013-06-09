@@ -3,9 +3,23 @@
 {% block charts %}
 
 {% if not session.fitbit_keys %}
-You need to be logged in to see charts
-<a href="{{ url_for('login') }}" class="">Login</a>
+
+<div class="container-fluid">
+<p class="lead">Not Logged In...</p>
+  <div class="row-fluid">
+    <div class="span1">
+  <a href="{{ url_for('login') }}" class="btn">Login</a>
+</div>
+<div class="span10">
+<p>In order to generate graphs you need to grant Fitboard permission to your Fitbit data.</p>
+<p>Fitboard connects your Fitbit to your Status Board using the Fitbit provided <abbr title="Application Programming Interface">API</abbr>.  Fitbit provides your data to Fitboard using the secure, open standard <a href="http://oauth.net" class="href">OAUTH</a>.</p>
+At anytime you can revoke Fitboard's <a href="http://www.fitbit.com/user/profile/apps" class="href">access</a> and remove the stored OAUTH tokens from Fitboard (your graphs will stop working).
+</div>
+</div>
+</div>
+
 {% else %}
+
 
 {% set timeseries = [
       ('1d', '1 Day'),
@@ -17,49 +31,63 @@ You need to be logged in to see charts
       ('steps', 'Steps'),
       ('calories', 'Calories'),
       ('distance', 'Distance'),
-      ('floors', 'Floors')]
+      ('floors', 'Floors'),
+      ('activeScore', 'Active Score'),]
       %}
-<hr>
+
+
+{% set sleep_charts = [
+      ('minutesAsleep', 'Minutes Asleep'),
+      ('efficiency', 'Sleep Efficiency'),
+      ('awakeningsCount', 'Times Awakened')]
+      %}
+
+
 <div class="row-fluid">
   <div class="span2">
     <img src="{{ session.user_profile.user.avatar }}" class="img-polaroid" alt="Image">
   </div>
-  <div class="span4">
-    <h2>{{ session.user_profile.user.displayName }}'s FitBit Summary</h2>
+  <div class="span6">
+    <h2>{{ session.user_profile.user.displayName }}'s Fitbit Summary</h2>
     <ul>
       <li>Battery Level: {{ session.device_info.0.battery }}</li>
       <li>Last Sync: {{ session.device_info.0.lastSyncTime }}</li>
+      <li>Fitbit Type: {{ session.device_info.0.deviceVersion }}</li>
     </ul>
   </div>
   </div>
-
 <hr>
 
 <div class="row-fluid">
-  <div class="span3">
-    <h3><span class="fui-arrow-right"></span> Group Charts</h3>
-    <h4>Activity Level</h4>
-    <div class="btn-toolbar">
-      <div class="btn-group">
+<div class="alert alert-info alert-block">
+  <button type="button" class="close" data-dismiss="alert"></button>
+  <i class="icon-bell icon4x "></i> The buttons below will only work on an iPad with Statusboard installed
+</div>
+</div>
 
-        {% for period, disp_period in timeseries %}
-        <a class="btn" href="panicboard://?url={{ url_for('get_levelsummary', _external=True, user_id=session.fitbit_keys.0, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
-        {% endfor %}
 
-      </div>
-    </div>
-  </div>
-
-  <div class="span3 offset2">
-    <h3><span class="fui-arrow-right"></span>Individual Charts</h3>
-
-    {% for chart, chart_name in individual_charts %}
+<div class="row-fluid">
+  <div class="span6">
+    <h3><i class="icon-user pull-left icon-muted icon-border"></i>Individual Graphs</h3>
+    {%- for chart, chart_name in individual_charts -%}
     <h4>{{chart_name}}</h4>
-
     <div class="btn-toolbar">
     <div class="btn-group">
+        {%- for period, disp_period in timeseries -%}
+        <a class="btn" href="panicboard://?url={{ url_for('get_activity', _external=True, user_id=session.fitbit_keys.0, resource=chart, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
+        {% endfor %}
+    </div>
+    </div>
+{% endfor %}
+    </div>
 
-        {% for period, disp_period in timeseries %}
+  <div class="span6">
+    <h3><i class="icon-off pull-left icon-muted icon-border"></i>Sleep Graphs</h3>
+    {%- for chart, chart_name in sleep_charts -%}
+    <h4>{{chart_name}}</h4>
+    <div class="btn-toolbar">
+    <div class="btn-group">
+        {%- for period, disp_period in timeseries -%}
         <a class="btn" href="panicboard://?url={{ url_for('get_activity', _external=True, user_id=session.fitbit_keys.0, resource=chart, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
         {% endfor %}
 
@@ -67,6 +95,20 @@ You need to be logged in to see charts
     </div>
 {% endfor %}
   </div>
+
+  <div class="span6">
+    <h3><span class="icon-bar-chart pull-left icon-muted icon-border"></span> Group Graphs</h3>
+    <h4>Activity Level</h4>
+    <div class="btn-toolbar">
+      <div class="btn-group">
+        {%- for period, disp_period in timeseries -%}
+        <a class="btn" href="panicboard://?url={{ url_for('get_levelsummary', _external=True, user_id=session.fitbit_keys.0, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+
   </div>
 
 {% endif %}
