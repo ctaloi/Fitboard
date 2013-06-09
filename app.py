@@ -13,4 +13,4 @@ db = SQLAlchemy(app)
 stathat = StatHat()
 stathat.init_app(app)  # or stathat = StatHat(app)
 
-# toolbar = DebugToolbarExtension(app)
+toolbar = DebugToolbarExtension(app)
