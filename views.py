@@ -25,6 +25,7 @@ def page_not_found(e):
 
 @app.route('/')
 def index():
+    stathat.count('fitboard_index', 1)
     return render_template('intro.html')
 
 
@@ -36,6 +37,7 @@ def about():
 
 @app.route('/intro')
 def intro():
+    stathat.count('fitboard_index', 1)
     return render_template('intro.html')
 
 
@@ -51,6 +53,7 @@ def get_fitbit_app_token(token=None):
 
 @app.route('/login')
 def login():
+    stathat.count('fitboard_login', 1)
     return fitbit_app.authorize(
         callback=url_for('oauth_authorized', next=request.args.get('next') or request.referrer or None))
 
