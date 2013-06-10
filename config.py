@@ -5,3 +5,6 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 DEBUG = False
+
+STATHAT_EZ_KEY = 'ctaloi@gmail.com'
+STATHAT_USE_GEVENT = False
