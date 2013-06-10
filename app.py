@@ -10,7 +10,6 @@ app = Flask(__name__)
 app.config.from_object('config')
 app.config.from_envvar('SECRETS', silent=True)
 
-db = SQLAlchemy(app)
 
 stathat = StatHat()
 stathat.init_app(app)  # or stathat = StatHat(app)
@@ -24,3 +23,5 @@ handler.setFormatter(Formatter(
 ))
 handler.setLevel(logging.WARNING)
 app.logger.addHandler(handler)
+
+db = SQLAlchemy(app)

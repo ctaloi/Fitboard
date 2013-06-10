@@ -30,3 +30,11 @@ This installs the following:
     python-dateutil==1.5
     requests==0.14.0
     wsgiref==0.1.2
+
+
+# Init DB
+
+Enter the following in an interactive python shell
+
+    from main import db
+    db.create_all()

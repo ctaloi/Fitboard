@@ -84,7 +84,6 @@ def oauth_authorized(resp):
     session['device_info'] = get_device_info(user_id)
 
     return redirect(url_for('charts'))
-    # return render_template('base.html', battery=battery, last_sync=last_sync)
 
 
 @app.route('/u/<user_id>/drop')
