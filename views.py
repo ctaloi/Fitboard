@@ -4,22 +4,26 @@ from app import app, db, stathat
 from models import User
 from random import choice
 from flask_oauth import OAuth
+import os
+
+my_consumer_key = os.environ.get('CONSUMER_KEY')
+my_consumer_secret = os.environ.get('CONSUMER_SECRET')
 
 oauth = OAuth()
-# setup oauth
 fitbit_app = oauth.remote_app(
     'fitbit',
     base_url='https://api.fitbit.com',
     request_token_url='http://api.fitbit.com/oauth/request_token',
     access_token_url='http://api.fitbit.com/oauth/access_token',
     authorize_url='http://www.fitbit.com/oauth/authorize',
-    consumer_key='13d4f6b6b2c245cd83866f2ce95326e6',
-    consumer_secret='098d3132f7f34233ab4bc9a49e49a121'
+    consumer_key=my_consumer_key,
+    consumer_secret=my_consumer_secret
 )
 
 
 @app.errorhandler(404)
 def page_not_found(e):
+    app.logger.warning('404')
     return render_template('404.html'), 404
 
 
@@ -31,13 +35,11 @@ def index():
 
 @app.route('/about')
 def about():
-    stathat.count('fitboard_about', 1)
     return render_template('about.html')
 
 
 @app.route('/intro')
 def intro():
-    stathat.count('fitboard_index', 1)
     return render_template('intro.html')
 
 
@@ -83,14 +85,6 @@ def oauth_authorized(resp):
 
     return redirect(url_for('charts'))
     # return render_template('base.html', battery=battery, last_sync=last_sync)
-
-
-@app.route('/u/<user_id>')
-def get_user(user_id):
-    """Get stored fitbit auth for specified user"""
-
-    user = User.query.filter_by(user_id=user_id).first_or_404()
-    return render_template('base.html')
 
 
 @app.route('/u/<user_id>/drop')
@@ -148,6 +142,7 @@ def get_user_profile(user_id):
 
 @app.route('/u/<user_id>/<resource>/<period>')
 def get_activity(user_id, resource, period='1w', return_as='json'):
+    stathat.count('fitboard-hits', 1)
     ''' Use  API to return resource data '''
 
     slash_resource = 'activities/' + resource
@@ -207,6 +202,7 @@ def get_activity(user_id, resource, period='1w', return_as='json'):
 
 @app.route('/u/summary/<user_id>/<period>')
 def get_levelsummary(user_id, period):
+    stathat.count('fitboard-hits', 1)
 
     if period in ('1d', '1w'):
         g_type = 'bar'
@@ -288,7 +284,7 @@ def output_json(dp, resource, datasequence_color, graph_type):
         "graph":    {
             'title':                graph_title,
             'yAxis':                {'hide': False},
-            'xAxis':                {'hide': True},
+            'xAxis':                {'hide': False},
             'refreshEveryNSeconds': 240,
             'type':                 graph_type,
             'datasequences':        datasequences,

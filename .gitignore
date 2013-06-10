@@ -1,3 +1,7 @@
 *.pyc
 .DS_Store
 *sublime*
+*secret*
+start.txt
+*.db
+*.log
