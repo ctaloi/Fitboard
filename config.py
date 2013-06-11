@@ -6,8 +6,7 @@ import os
 SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 
 SECRET_KEY = os.environ['SECRET_KEY']
-
-DEBUG = True
+DEBUG = os.environ['DEBUG_MODE']
 
 STATHAT_EZ_KEY = 'ctaloi@gmail.com'
 STATHAT_USE_GEVENT = False
