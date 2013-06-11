@@ -29,5 +29,4 @@ st_logger.setFormatter(Formatter(
 st_logger.setLevel(logging.INFO)
 app.logger.addHandler(st_logger)
 
-
 db = SQLAlchemy(app)

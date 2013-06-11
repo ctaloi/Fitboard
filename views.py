@@ -27,9 +27,14 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
+@app.errorhandler(500)
+def server_error(e):
+    app.logger.warning('500')
+    return render_template('404.html'), 500
+
+
 @app.route('/')
 def index():
-    stathat.count('fitboard_index', 1)
     return render_template('intro.html')
 
 
