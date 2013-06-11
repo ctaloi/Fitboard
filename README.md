@@ -38,3 +38,21 @@ Enter the following in an interactive python shell
 
     from main import db
     db.create_all()
+
+# On heroku, add
+
+heroku addons:add heroku-postgresql:dev
+
+    Adding heroku-postgresql:dev on fitboard-me... done, v15 (free)
+    Attached as HEROKU_POSTGRESQL_TEAL_URL
+    Database has been created and is available
+     ! This database is empty. If upgrading, you can transfer
+     ! data from another database with pgbackups:restore.
+    Use `heroku addons:docs heroku-postgresql:dev` to view documentation.
+
+(fitboard_me)imac27:fitboard_me Chris$ heroku pg:promote HEROKU_POSTGRESQL_TEAL_URL
+
+    Promoting HEROKU_POSTGRESQL_TEAL_URL to DATABASE_URL... done
+
+
+

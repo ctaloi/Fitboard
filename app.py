@@ -10,7 +10,6 @@ app = Flask(__name__)
 app.config.from_object('config')
 app.config.from_envvar('SECRETS', silent=True)
 
-
 stathat = StatHat()
 stathat.init_app(app)  # or stathat = StatHat(app)
 
