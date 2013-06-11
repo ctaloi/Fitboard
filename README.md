@@ -34,10 +34,6 @@ This installs the following:
 
 # Init DB
 
-Enter the following in an interactive python shell
-
-    from main import db
-    db.create_all()
 
 # On heroku, add
 
@@ -54,5 +50,10 @@ heroku addons:add heroku-postgresql:dev
 
     Promoting HEROKU_POSTGRESQL_TEAL_URL to DATABASE_URL... done
 
+Enter to get an interactive python shell
+
+    heroku run python
+    >>> from main import db
+    >>> db.create_all()
 
 
