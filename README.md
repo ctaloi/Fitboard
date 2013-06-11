@@ -34,7 +34,6 @@ This installs the following:
 
 # Init DB
 
-
 # On heroku, add
 
 heroku addons:add heroku-postgresql:dev
