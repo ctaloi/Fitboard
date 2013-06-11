@@ -30,22 +30,17 @@ def page_not_found(e):
 @app.errorhandler(500)
 def server_error(e):
     app.logger.warning('500')
-    return render_template('404.html'), 500
+    return render_template('500.html'), 500
 
 
 @app.route('/')
 def index():
-    return render_template('intro.html')
+    return render_template('index.html')
 
 
 @app.route('/about')
 def about():
     return render_template('about.html')
-
-
-@app.route('/intro')
-def intro():
-    return render_template('intro.html')
 
 
 @app.route('/charts')
@@ -110,8 +105,10 @@ def drop_user(user_id):
 
 @app.route('/logout')
 def logout():
+    flash('You are logged out')
     session.pop('fitbit_keys', None)
     session.pop('user_profile', None)
+    session.pop('device_info', None)
     return redirect(url_for('index'))
 
 
