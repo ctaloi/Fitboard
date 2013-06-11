@@ -2,7 +2,6 @@ Flask==0.9
 Flask-DebugToolbar==0.8.0
 Flask-OAuth==0.12
 Flask-SQLAlchemy==0.16
-Flask-StatHat==0.0.3
 Jinja2==2.7
 MarkupSafe==0.18
 SQLAlchemy==0.8.1

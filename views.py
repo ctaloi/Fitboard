@@ -1,6 +1,6 @@
 import fitbit
 from flask import render_template, flash, redirect, session, url_for, request, jsonify
-from app import app, db, stathat
+from app import app, db
 from models import User
 from random import choice
 from flask_oauth import OAuth
@@ -60,7 +60,6 @@ def get_fitbit_app_token(token=None):
 
 @app.route('/login')
 def login():
-    stathat.count('fitboard_login', 1)
     return fitbit_app.authorize(
         callback=url_for('oauth_authorized', next=request.args.get('next') or request.referrer or None))
 
@@ -146,7 +145,6 @@ def get_user_profile(user_id):
 
 @app.route('/u/<user_id>/<resource>/<period>')
 def get_activity(user_id, resource, period='1w', return_as='json'):
-    stathat.count('fitboard', 1)
     ''' Use  API to return resource data '''
 
     slash_resource = 'activities/' + resource
@@ -206,7 +204,6 @@ def get_activity(user_id, resource, period='1w', return_as='json'):
 
 @app.route('/u/summary/<user_id>/<period>')
 def get_levelsummary(user_id, period):
-    stathat.count('fitboard', 1)
 
     if period in ('1d', '1w'):
         g_type = 'bar'
