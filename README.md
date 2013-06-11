@@ -31,22 +31,25 @@ This installs the following:
     requests==0.14.0
     wsgiref==0.1.2
 
+# Database
 
-# Init DB
+## Heroku
 
-# On heroku, add
+### Create DB
 
-heroku addons:add heroku-postgresql:dev
+    heroku addons:add heroku-postgresql:dev
 
     Adding heroku-postgresql:dev on fitboard-me... done, v15 (free)
     Attached as HEROKU_POSTGRESQL_TEAL_URL
+
     Database has been created and is available
      ! This database is empty. If upgrading, you can transfer
      ! data from another database with pgbackups:restore.
     Use `heroku addons:docs heroku-postgresql:dev` to view documentation.
 
-(fitboard_me)imac27:fitboard_me Chris$ heroku pg:promote HEROKU_POSTGRESQL_TEAL_URL
+### Promote DB
 
+    heroku pg:promote HEROKU_POSTGRESQL_TEAL_URL
     Promoting HEROKU_POSTGRESQL_TEAL_URL to DATABASE_URL... done
 
 Enter to get an interactive python shell

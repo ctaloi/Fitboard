@@ -122,8 +122,8 @@ def get_connector(user_id):
     x = get_creds(user_id)
 
     connector = fitbit.Fitbit(
-        consumer_key='13d4f6b6b2c245cd83866f2ce95326e6',
-        consumer_secret='098d3132f7f34233ab4bc9a49e49a121',
+        consumer_key=my_consumer_key,
+        consumer_secret=my_consumer_secret,
         user_key=x.user_key,
         user_secret=x.user_secret)
     return connector
@@ -141,7 +141,7 @@ def get_user_profile(user_id):
 
 @app.route('/u/<user_id>/<resource>/<period>')
 def get_activity(user_id, resource, period='1w', return_as='json'):
-    stathat.count('fitboard-hits', 1)
+    stathat.count('fitboard', 1)
     ''' Use  API to return resource data '''
 
     slash_resource = 'activities/' + resource
@@ -201,7 +201,7 @@ def get_activity(user_id, resource, period='1w', return_as='json'):
 
 @app.route('/u/summary/<user_id>/<period>')
 def get_levelsummary(user_id, period):
-    stathat.count('fitboard-hits', 1)
+    stathat.count('fitboard', 1)
 
     if period in ('1d', '1w'):
         g_type = 'bar'
