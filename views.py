@@ -6,8 +6,12 @@ from random import choice
 from flask_oauth import OAuth
 import os
 
-my_consumer_key = os.environ.get('CONSUMER_KEY')
-my_consumer_secret = os.environ.get('CONSUMER_SECRET')
+
+# MY_CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
+# MY_CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
+
+MY_CONSUMER_KEY = 'bcf9bd384513460395989025a2ede86a'
+MY_CONSUMER_SECRET = 'fd650ddb21c542c0a3ee3483ddda5727'
 
 oauth = OAuth()
 fitbit_app = oauth.remote_app(
@@ -16,21 +20,21 @@ fitbit_app = oauth.remote_app(
     request_token_url='http://api.fitbit.com/oauth/request_token',
     access_token_url='http://api.fitbit.com/oauth/access_token',
     authorize_url='http://www.fitbit.com/oauth/authorize',
-    consumer_key=my_consumer_key,
-    consumer_secret=my_consumer_secret
+    consumer_key=MY_CONSUMER_KEY,
+    consumer_secret=MY_CONSUMER_SECRET
 )
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    app.logger.warning('404')
-    return render_template('404.html'), 404
+# @app.errorhandler(404)
+# def page_not_found(e):
+#     app.logger.warning('404')
+#     return render_template('404.html'), 404
 
 
-@app.errorhandler(500)
-def server_error(e):
-    app.logger.warning('500')
-    return render_template('500.html'), 500
+# @app.errorhandler(500)
+# def server_error(e):
+#     app.logger.warning('500')
+#     return render_template('500.html'), 500
 
 
 @app.route('/')
@@ -64,7 +68,7 @@ def login():
 def oauth_authorized(resp):
     next_url = request.args.get('next') or url_for('charts')
     if resp is None:
-        flash(u'You denied the request to sign in.')
+        flash('You denied the request to sign in.')
         return redirect(next_url)
 
     user_id = resp['encoded_user_id']
@@ -81,6 +85,8 @@ def oauth_authorized(resp):
 
     session['user_profile'] = get_user_profile(user_id)
     session['device_info'] = get_device_info(user_id)
+
+    flash('Logged in')
 
     return redirect(url_for('charts'))
 
@@ -123,10 +129,21 @@ def get_connector(user_id):
     x = get_creds(user_id)
 
     connector = fitbit.Fitbit(
-        consumer_key=my_consumer_key,
-        consumer_secret=my_consumer_secret,
+        consumer_key=MY_CONSUMER_KEY,
+        consumer_secret=MY_CONSUMER_SECRET,
         user_key=x.user_key,
         user_secret=x.user_secret)
+    return connector
+
+
+def get_connector_debug(user_id):
+    """Function takes user_id and returns variable to connect to fitbit from db"""
+
+    connector = fitbit.Fitbit(
+        consumer_key='1f5e52b0d12b40ff872df3417e15e313',
+        consumer_secret='c91b93731ca84a7582d1a9dc7944e127',
+        user_key='5cd86566e74fa830e1b4ee298447992c',
+        user_secret='feb368b1da6b6afaa6e828ea7e06c927')
     return connector
 
 
