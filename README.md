@@ -56,3 +56,4 @@ Enter to get an interactive python shell
     >>> db.create_all()
 
 
+test
