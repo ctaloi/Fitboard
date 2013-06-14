@@ -124,8 +124,8 @@ def get_connector(user_id):
     x = get_creds(user_id)
 
     connector = fitbit.Fitbit(
-        consumer_key='bcf9bd384513460395989025a2ede86a',
-        consumer_secret='fd650ddb21c542c0a3ee3483ddda5727',
+        consumer_key=my_consumer_key,
+        consumer_secret=my_consumer_secret,
         user_key=x.user_key,
         user_secret=x.user_secret)
     return connector
