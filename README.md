@@ -1,59 +1,83 @@
 
 # Building fitboard.me
 
-## Create a new virtalenv
+You should be able to depoly Fitboard locally, to a VPS or on Heroku with minimal configuration changes
 
-I use [Virtualenv Wrapper](http://virtualenvwrapper.readthedocs.org/en/latest/command_ref.html) to manage my virtual environments
+## Local Prep
 
-    mkvirtualenv fitboard_me
+### Create a new virtalenv
 
-## Get Python ready
+Use [Virtualenv Wrapper](http://virtualenvwrapper.readthedocs.org/en/latest/command_ref.html) to manage virtual environments
 
-    pip install -r requirements.txt
+    mkvirtualenv fitboard
 
-This installs the following:
+### Clone fitboard
 
-    Flask==0.9
-    Flask-DebugToolbar==0.8.0
-    Flask-OAuth==0.12
-    Flask-SQLAlchemy==0.16
-    Jinja2==2.7
-    MarkupSafe==0.18
-    SQLAlchemy==0.8.1
-    Werkzeug==0.8.3
-    blinker==1.2
-    distribute==0.6.45
-    fitbit==0.0.2
-    httplib2==0.8
-    itsdangerous==0.21
-    oauth2==1.5.211
-    python-dateutil==1.5
-    requests==0.14.0
-    wsgiref==0.1.2
+    cd ~/Projects
+    git clone https://github.com/ctaloi/Fitboard.git
+
+### Install python tools
+
+    cd ~/Projects/Fitboard
+    workon fitboard
+    pip -r install requirments.txt
+
+### If using Heroku
+
+- Install [Heroku Toolbelt](https://toolbelt.heroku.com/)
+
+## Choose a database
+
+I've tested Fitboard with SQLite and Postgres, both work well and using SQLAlchemy makes it easy.
+
+### If using Heroku
+
+Heroku does not support SQLite so I am using Postgres
+
+Add Postgres addon
+
+    heroku addons:add heroku-postgresql:dev
+
+Promote the database
+
+    heroku pg:promote HEROKU_POSTGRESQL_TEAL_URL
 
 
-# Init DB
-
-# On heroku, add
-
-heroku addons:add heroku-postgresql:dev
-
-    Adding heroku-postgresql:dev on fitboard-me... done, v15 (free)
-    Attached as HEROKU_POSTGRESQL_TEAL_URL
-    Database has been created and is available
-     ! This database is empty. If upgrading, you can transfer
-     ! data from another database with pgbackups:restore.
-    Use `heroku addons:docs heroku-postgresql:dev` to view documentation.
-
-(fitboard_me)imac27:fitboard_me Chris$ heroku pg:promote HEROKU_POSTGRESQL_TEAL_URL
-
-    Promoting HEROKU_POSTGRESQL_TEAL_URL to DATABASE_URL... done
-
-Enter to get an interactive python shell
+This sets up Postgres and sets the heroku config DATABASE_URL for us.  To create and populate the database table we need to use a heroku python shell
 
     heroku run python
     >>> from main import db
     >>> db.create_all()
 
+You can use this Postgres instance locally or deployed
 
-test
+You shouldn't need to do anything else if you are using SQLite
+
+## Configure the app
+
+In order to talk to the Fitbit API you need to [register](https://dev.fitbit.com/apps/new) your app and obtain a consumer key and secret.
+
+Completing the registration request is easy.
+
+- Default access type: Read-Only
+- Application Type: Browser
+
+Note the CONSUMER_KEY and CONSUMER_SECRET
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
