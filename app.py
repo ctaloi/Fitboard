@@ -14,8 +14,6 @@ app.config.from_object('config')
 stathat = StatHat()
 stathat = StatHat(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-
 heroku = Heroku(app)
 
 toolbar = DebugToolbarExtension(app)

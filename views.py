@@ -4,6 +4,7 @@ from app import app, db, stathat
 from models import User
 from random import choice
 from flask_oauth import OAuth
+import os
 
 my_consumer_key = os.environ.get('CONSUMER_KEY')
 my_consumer_secret = os.environ.get('CONSUMER_SECRET')
