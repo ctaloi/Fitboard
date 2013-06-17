@@ -5,11 +5,8 @@ from models import User
 from random import choice
 from flask_oauth import OAuth
 
-# MY_CONSUMER_KEY = 'bcf9bd384513460395989025a2ede86a'
-# MY_CONSUMER_SECRET = 'fd650ddb21c542c0a3ee3483ddda5727'
-
-my_consumer_key = 'bcf9bd384513460395989025a2ede86a'  # os.environ.get('CONSUMER_KEY')
-my_consumer_secret = 'fd650ddb21c542c0a3ee3483ddda5727'  # os.environ.get('CONSUMER_SECRET')
+my_consumer_key = os.environ.get('CONSUMER_KEY')
+my_consumer_secret = os.environ.get('CONSUMER_SECRET')
 
 oauth = OAuth()
 fitbit_app = oauth.remote_app(
