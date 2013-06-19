@@ -72,9 +72,9 @@
       {% endfor %}
     </ul>
     <ul class="nav pull-right">
-      <li class="divider-vertical"></li>
       {% if not session.fitbit_keys %}
-      <li><a href="{{ url_for('login') }}"> Login</a></li>
+      <!-- <li class="divider-vertical"></li> -->
+      <!-- <li><a href="{{ url_for('login') }}"> Login</a></li> -->
       {% else %}
       <li><a href="{{ url_for('logout') }}"> Logout</a></li>
       {% endif %}
@@ -86,6 +86,11 @@
   <div class="page-header">
     <h1><i class="icon-bar-chart icon-2x"></i>  Fitboard.me<small> Connecting Fitbit to Statusboard </small></h1>
   </div>
+      {% if not session.fitbit_keys %}
+    <a class="btn btn-primary pull-right" href="{{ url_for('login') }}">
+      <i class="icon-star icon-2x pull-left"></i> Login using Fitbit <br> to get started</a>
+    {% endif %}
+
 </div>
 
 {% with messages = get_flashed_messages() %}
