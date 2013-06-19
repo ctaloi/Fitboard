@@ -20,7 +20,14 @@ db = SQLAlchemy(app)
 
 mail = Mail(app)
 
-if not app.debug and os.environ.get('HEROKU') is None:
+if os.environ.get('HEROKU') is True:
+    import logging
+    stream_handler = logging.StreamHandler()
+    app.logger.addHandler(stream_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('FITBOARD-START-HEROKU')
+
+else:
     import logging
     from logging.handlers import RotatingFileHandler
     file_handler = RotatingFileHandler('fitboard.log', 'a', 1 * 1024 * 1024, 10)
@@ -29,10 +36,3 @@ if not app.debug and os.environ.get('HEROKU') is None:
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
     app.logger.info('FITBOARD-START')
-
-if os.environ.get('HEROKU') is not None:
-    import logging
-    stream_handler = logging.StreamHandler()
-    app.logger.addHandler(stream_handler)
-    app.logger.setLevel(logging.INFO)
-    app.logger.info('FITBOARD-START-HEROKU')
