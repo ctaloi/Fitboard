@@ -1,0 +1,7 @@
+*.pyc
+.DS_Store
+app.sublime-workspace
+*secret*
+*.db
+*.log
+*log*

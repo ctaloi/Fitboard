@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %} - Page Not Found{% endblock %}
+{% block intro %}
+    <div class="row-fluid">
+        <div class="alert alert-warning alert-block">
+            <h2><i class="icon-meh icon-2x"></i> Page Not Found</h2>
+            <p>Something is wrong...</p>
+            {% if not session.fitbit_keys %}
+            <p class="lead">Not Logged In...</p>
+            <a href="{{ url_for('login') }}" class="btn">Login</a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
