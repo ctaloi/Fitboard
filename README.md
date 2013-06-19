@@ -2,7 +2,7 @@
 
 [Fitboard.me](http://fitboard.me) is a webapp built to connect the [Fitbit API](http://dev.fitbit.com/) to [Panic's Status Board](https://panic.com/statusboard/) iPad application.  Fitboard is free for anyone to use at [Fitboard.me](http://fitboard.me) or you can fork the repo and build your own.
 
-The source for Fitbit is open - please contribute.
+The source for Fitboard is open - please contribute.
 
 Fitboard allows you to visualize
 
