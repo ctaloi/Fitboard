@@ -26,12 +26,20 @@ def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'img/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-def email_alert(message):
+def email_log(message):
     msg = Message("%s Notice Fitboard" % (message),
                   recipients=["ctaloi@gmail.com"])
     msg.body = "NOTICE %s \n Logile Attached \n" % (message)
     with app.open_resource("fitboard.log") as fp:
         msg.attach("fitboard.log", "text/plain", fp.read())
+    mail.send(msg)
+    return
+
+
+def email_alert(message):
+    msg = Message("%s Notice Fitboard" % (message),
+                  recipients=["ctaloi@gmail.com"])
+    msg.body = "NOTICE %s \n Logile Attached \n" % (message)
     mail.send(msg)
     return
 
