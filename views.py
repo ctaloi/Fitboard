@@ -47,7 +47,6 @@ def email_alert(message):
 @app.errorhandler(404)
 def page_not_found(e):
     app.logger.info('404')
-    email_alert('404')
     return render_template('404.html'), 404
 
 
@@ -78,6 +77,7 @@ def get_fitbit_app_token(token=None):
 
 @app.route('/login')
 def login():
+    email_alert('NEW LOGIN')
     return fitbit_app.authorize(
         callback=url_for('oauth_authorized', next=request.args.get('next') or request.referrer or None))
 
