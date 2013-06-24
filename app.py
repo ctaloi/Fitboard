@@ -7,8 +7,11 @@ import logging
 from logging import Formatter
 from logging.handlers import RotatingFileHandler
 import os
+import chartkick
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=chartkick.js(), static_url_path='/static')
+# app = Flask(__name__)
+app.jinja_env.add_extension("chartkick.ext.charts")
 
 app.config.from_object('config')
 

@@ -70,6 +70,18 @@ def charts():
     return render_template('charts.html')
 
 
+@app.route('/view/charts')
+def view_charts():
+    user = session['fitbit_keys'][0]
+    print user
+    data = get_activity(user, 'steps', '3m', 'raw')
+    my_list = []
+    for item in data:
+        my_list.append([str(item['dateTime']), float(item['value'])])
+
+    return render_template('view_charts.html', data=my_list)
+
+
 @fitbit_app.tokengetter
 def get_fitbit_app_token(token=None):
     return session.get('fitbit_app_token')
@@ -220,7 +232,6 @@ def get_activity(user_id, resource, period='1w', return_as='json'):
         return the_data
     if return_as == 'json':
         return jsonify(output_json(the_data, resource, datasequence_color, graph_type))
-
 
 @app.route('/u/summary/<user_id>/<period>')
 def get_levelsummary(user_id, period):

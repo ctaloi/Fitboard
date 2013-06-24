@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% set active_page = "view" %}
+{% block charts %}
+
+{% if not session.fitbit_keys %}
+
+<div class="container-fluid">
+<p class="lead">Not Logged In...</p>
+  <div class="row-fluid">
+    <div class="span2">
+  <a href="{{ url_for('login') }}" class="btn">Login</a>
+</div>
+<div class="span10">
+<p>In order to generate graphs you need to grant Fitboard permission to your Fitbit data.</p>
+<p>Fitboard connects your Fitbit to your Status Board using the Fitbit provided <abbr title="Application Programming Interface">API</abbr>.  Fitbit provides your data to Fitboard using the secure, open standard <a href="http://oauth.net" class="href">OAUTH</a>.</p>
+At anytime you can revoke Fitboard's <a href="http://www.fitbit.com/user/profile/apps" class="href">access</a> and remove the stored OAUTH tokens from Fitboard (your graphs will stop working).
+</div>
+</div>
+</div>
+
+{% else %}
+
+
+{% set timeseries = [
+      ('1d', '1 Day'),
+      ('1m', '1 Month'),
+      ('3m', '3 Months'),
+      ('1y', '1 Year')] %}
+
+{% set individual_charts = [
+      ('steps', 'Steps'),
+      ('calories', 'Calories'),
+      ('distance', 'Distance'),
+      ('floors', 'Floors'),
+      ('activeScore', 'Active Score'),]
+      %}
+
+
+{% set sleep_charts = [
+      ('minutesAsleep', 'Minutes Asleep'),
+      ('efficiency', 'Sleep Efficiency'),
+      ('awakeningsCount', 'Times Awakened')]
+      %}
+
+
+<div class="row-fluid">
+  <div class="span2">
+    <img src="{{ session.user_profile.user.avatar }}" class="img-polaroid" alt="Image">
+  </div>
+  <div class="span6">
+    <h2>{{ session.user_profile.user.displayName }}'s Fitbit Summary</h2>
+    <ul>
+      <li>Battery Level: {{ session.device_info.0.battery }}</li>
+      <li>Last Sync: {{ session.device_info.0.lastSyncTime }}</li>
+      <li>Fitbit Type: {{ session.device_info.0.deviceVersion }}</li>
+    </ul>
+  </div>
+  </div>
+<hr>
+
+<div class="row-fluid">
+<div class="alert alert-info alert-block">
+  <button type="button" class="close" data-dismiss="alert"></button>
+  <i class="icon-bell icon4x "></i> Local Graphs
+</div>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <h3><i class="icon-user pull-left icon-muted icon-border"></i>Steps</h3>
+
+    {% line_chart data %}
+
+  </div>
+</div>
+<hr>
+</div>
+
+{% endif %}
+{% endblock %}

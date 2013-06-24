@@ -51,10 +51,16 @@
     ga('send', 'pageview');
   </script>
 
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="{{ url_for('static', filename='chartkick.js') }}"></script>
+
+
 </head>
 
 {% set navigation_bar = [
     ('/charts', 'charts', 'Charts'),
+    ('/view/charts', 'view', 'View Charts'),
     ('/about', 'about', 'About')
 ] -%}
 {% set active_page = active_page|default('index') -%}
