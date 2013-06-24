@@ -71,19 +71,15 @@ def charts():
     return render_template('charts.html')
 
 
-@app.route('/view/charts')
-def build_charts():
+@app.route('/graph/<act>')
+def build_charts(act):
 
     user = session['fitbit_keys'][0]
-    duration = '3m'
-    activities = ('steps', 'distance', 'floors', 'calories')
-
-    data = get_activity(user, 'distance', '3m', 'raw')
-    my_list = []
+    data = get_activity(user, act, '3m', 'raw')
+    act = []
     for item in data:
-        my_list.append([str(item['dateTime']), float(item['value'])])
-
-    return render_template('view_charts.html', data=my_list)
+        act.append([str(item['dateTime']), float(item['value'])])
+    return render_template('view_charts.html', data=act)
 
 
 @fitbit_app.tokengetter
