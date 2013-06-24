@@ -26,6 +26,7 @@ def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'img/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
+
 def email_log(message):
     msg = Message("%s Notice Fitboard" % (message),
                   recipients=["ctaloi@gmail.com"])
@@ -71,10 +72,13 @@ def charts():
 
 
 @app.route('/view/charts')
-def view_charts():
+def build_charts():
+
     user = session['fitbit_keys'][0]
-    print user
-    data = get_activity(user, 'steps', '3m', 'raw')
+    duration = '3m'
+    activities = ('steps', 'distance', 'floors', 'calories')
+
+    data = get_activity(user, 'distance', '3m', 'raw')
     my_list = []
     for item in data:
         my_list.append([str(item['dateTime']), float(item['value'])])
@@ -106,7 +110,8 @@ def oauth_authorized(resp):
     user_key = resp['oauth_token']
     user_secret = resp['oauth_token_secret']
 
-    session['fitbit_keys'] = (user_id, user_key, user_secret)  # add session cookie
+    session['fitbit_keys'] = (
+        user_id, user_key, user_secret)  # add session cookie
     active_user = User(user_id, user_key, user_secret)
     check_user = User.query.filter_by(user_id=user_id).first()
 
@@ -176,7 +181,8 @@ def get_user_profile(user_id):
 
 @app.route('/u/<user_id>/<resource>/<period>')
 def get_activity(user_id, resource, period='1w', return_as='json'):
-    app.logger.info('resource, %s, %s, %s, %s, %s' % (user_id, resource, period, return_as, request.remote_addr))
+    app.logger.info('resource, %s, %s, %s, %s, %s' % (
+        user_id, resource, period, return_as, request.remote_addr))
     ''' Use  API to return resource data '''
 
     slash_resource = 'activities/' + resource
@@ -226,27 +232,34 @@ def get_activity(user_id, resource, period='1w', return_as='json'):
                     slash_resource = 'sleep/' + resource
                     dash_resource = 'sleep-' + resource
 
-    the_data = get_connector(user_id).time_series(slash_resource, base_date='today', period=period)[dash_resource]
+    the_data = get_connector(user_id).time_series(
+        slash_resource, base_date='today', period=period)[dash_resource]
 
     if return_as == 'raw':
         return the_data
     if return_as == 'json':
         return jsonify(output_json(the_data, resource, datasequence_color, graph_type))
 
+
 @app.route('/u/summary/<user_id>/<period>')
 def get_levelsummary(user_id, period):
 
-    app.logger.info('summary, summary, %s, %s, %s' % (user_id, period, request.remote_addr))
+    app.logger.info('summary, summary, %s, %s, %s' %
+                    (user_id, period, request.remote_addr))
 
     if period in ('1d', '1w'):
         g_type = 'bar'
     else:
         g_type = 'line'
 
-    minutesSedentary = get_activity(user_id, 'minutesSedentary', period=period, return_as='raw')
-    minutesLightlyActive = get_activity(user_id, 'minutesLightlyActive', period=period, return_as='raw')
-    minutesFairlyActive = get_activity(user_id, 'minutesFairlyActive', period=period, return_as='raw')
-    minutesVeryActive = get_activity(user_id, 'minutesVeryActive', period=period, return_as='raw')
+    minutesSedentary = get_activity(
+        user_id, 'minutesSedentary', period=period, return_as='raw')
+    minutesLightlyActive = get_activity(
+        user_id, 'minutesLightlyActive', period=period, return_as='raw')
+    minutesFairlyActive = get_activity(
+        user_id, 'minutesFairlyActive', period=period, return_as='raw')
+    minutesVeryActive = get_activity(
+        user_id, 'minutesVeryActive', period=period, return_as='raw')
 
     datasequences = []
 
@@ -256,7 +269,7 @@ def get_levelsummary(user_id, period):
     mv = []
 
     for x in minutesSedentary:
-        ms.append({'title':  x['dateTime'], 'value': float(x['value'])-480})
+        ms.append({'title':  x['dateTime'], 'value': float(x['value']) - 480})
     for x in minutesLightlyActive:
         ml.append({'title':  x['dateTime'], 'value': float(x['value'])})
     for x in minutesFairlyActive:
@@ -306,7 +319,8 @@ def output_json(dp, resource, datasequence_color, graph_type):
     graph_title = ''
     datapoints = []
     for x in dp:
-        datapoints.append({'title':  x['dateTime'], 'value': float(x['value'])})
+        datapoints.append({'title':  x[
+                          'dateTime'], 'value': float(x['value'])})
     datasequences = []
     datasequences.append({
         "title":        resource,
