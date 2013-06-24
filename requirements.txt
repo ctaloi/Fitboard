@@ -8,6 +8,7 @@ MarkupSafe==0.18
 SQLAlchemy==0.8.1
 Werkzeug==0.9.1
 blinker==1.2
+chartkick==0.2.0
 distribute==0.6.45
 fitbit==0.0.2
 flask-heroku==0.1.4
