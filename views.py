@@ -75,7 +75,7 @@ def charts():
 def build_charts(act):
 
     user = session['fitbit_keys'][0]
-    data = get_activity(user, act, '3m', 'raw')
+    data = get_activity(user, act, '1y', 'raw')
     act = []
     for item in data:
         act.append([str(item['dateTime']), float(item['value'])])
