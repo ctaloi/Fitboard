@@ -26,6 +26,7 @@ def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'img/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
+
 def email_log(message):
     msg = Message("%s Notice Fitboard" % (message),
                   recipients=["ctaloi@gmail.com"])
