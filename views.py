@@ -4,10 +4,12 @@ from app import app, db, mail, Message
 from models import User
 from random import choice
 from flask_oauth import OAuth
+from stathat import StatHatEZ, StatHatError
 import os
 
-my_consumer_key = os.environ.get('CONSUMER_KEY')
-my_consumer_secret = os.environ.get('CONSUMER_SECRET')
+MY_STATHAT_USER = os.environ.get('STATHAT_USER')
+MY_CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
+MY_CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
 
 oauth = OAuth()
 fitbit_app = oauth.remote_app(
@@ -16,8 +18,8 @@ fitbit_app = oauth.remote_app(
     request_token_url='http://api.fitbit.com/oauth/request_token',
     access_token_url='http://api.fitbit.com/oauth/access_token',
     authorize_url='http://www.fitbit.com/oauth/authorize',
-    consumer_key=my_consumer_key,
-    consumer_secret=my_consumer_secret
+    consumer_key=MY_CONSUMER_KEY,
+    consumer_secret=MY_CONSUMER_SECRET
 )
 
 
@@ -146,8 +148,8 @@ def get_connector(user_id):
     x = get_creds(user_id)
 
     connector = fitbit.Fitbit(
-        consumer_key=my_consumer_key,
-        consumer_secret=my_consumer_secret,
+        consumer_key=MY_CONSUMER_KEY,
+        consumer_secret=MY_CONSUMER_SECRET,
         user_key=x.user_key,
         user_secret=x.user_secret)
     return connector
