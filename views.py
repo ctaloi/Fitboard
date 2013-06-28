@@ -4,7 +4,7 @@ from app import app, db, mail, Message
 from models import User
 from random import choice
 from flask_oauth import OAuth
-from stathat import StatHatEZ, StatHatError
+from stathat import StatHat
 import os
 
 MY_STATHAT_USER = os.environ.get('STATHAT_USER')
@@ -48,11 +48,13 @@ def email_alert(message):
 
 
 def stat_log(statistic):
-    stats = StatHatEZ(MY_STATHAT_USER, statistic)
+    stats = StatHat(MY_STATHAT_USER)
+    app.logger.info(statistic)
     try:
-        stats.tick(async=False)
-    except StatHatError, e:
-        email_log(e)
+        stats.count(statistic, 1)
+    except Exception:
+        app.logger.info('push to stathat failed')
+        pass
 
 
 @app.errorhandler(404)
