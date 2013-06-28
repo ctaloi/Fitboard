@@ -65,7 +65,6 @@ def page_not_found(e):
 
 @app.route('/')
 def index():
-    app.logger.info('LOG INDEX HIT')
     return render_template('intro.html')
 
 
