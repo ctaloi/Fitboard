@@ -1,6 +1,6 @@
 import os
 
-DEBUG = True
+DEBUG = False
 
 # ---- choose DB ----
 # if sqlite
