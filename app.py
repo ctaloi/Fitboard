@@ -3,9 +3,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.heroku import Heroku
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_mail import Mail, Message
-import logging
-from logging import Formatter
-from logging.handlers import RotatingFileHandler
 import os
 
 app = Flask(__name__)
@@ -21,15 +18,21 @@ db = SQLAlchemy(app)
 mail = Mail(app)
 
 if os.environ.get('HEROKU') is True:
+    import logging
     stream_handler = logging.StreamHandler()
     app.logger.addHandler(stream_handler)
     app.logger.setLevel(logging.INFO)
     app.logger.info('Running on Heroku')
+    app.logger.info('-----------------')
 
 else:
+    import logging
+    from logging import Formatter
+    from logging.handlers import RotatingFileHandler
     file_handler = RotatingFileHandler('fitboard.log', 'a', 1 * 1024 * 1024, 10)
     file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
     app.logger.setLevel(logging.INFO)
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
     app.logger.info('Not running on Heroku')
+    app.logger.info('-----------------')
