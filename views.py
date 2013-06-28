@@ -42,9 +42,17 @@ def email_log(message):
 def email_alert(message):
     msg = Message("%s Notice Fitboard" % (message),
                   recipients=["ctaloi@gmail.com"])
-    msg.body = "NOTICE %s \n Logile Attached \n" % (message)
+    msg.body = "NOTICE %s \n " % (message)
     mail.send(msg)
     return
+
+
+def stat_log(statistic):
+    stats = StatHatEZ(MY_STATHAT_USER, statistic)
+    try:
+        stats.tick(async=False)
+    except StatHatError, e:
+        email_log(e)
 
 
 @app.errorhandler(404)
@@ -81,6 +89,7 @@ def get_fitbit_app_token(token=None):
 @app.route('/login')
 def login():
     email_alert('NEW LOGIN')
+    stat_log('Fitboard Login Counter')
     return fitbit_app.authorize(
         callback=url_for('oauth_authorized', next=request.args.get('next') or request.referrer or None))
 
@@ -168,6 +177,7 @@ def get_user_profile(user_id):
 @app.route('/u/<user_id>/<resource>/<period>')
 def get_activity(user_id, resource, period='1w', return_as='json'):
     app.logger.info('resource, %s, %s, %s, %s, %s' % (user_id, resource, period, return_as, request.remote_addr))
+    stat_log('Fitboard Calls')
     ''' Use  API to return resource data '''
 
     slash_resource = 'activities/' + resource
