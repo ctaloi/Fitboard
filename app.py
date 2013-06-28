@@ -17,15 +17,20 @@ db = SQLAlchemy(app)
 
 mail = Mail(app)
 
-if os.environ.get('HEROKU') is True:
+MY_PLATFORM = os.environ.get('PLATFORM')
+
+print(MY_PLATFORM)
+
+if MY_PLATFORM == 'HEROKU':
+    print('Running on Heroku')
     import logging
     stream_handler = logging.StreamHandler()
     app.logger.addHandler(stream_handler)
     app.logger.setLevel(logging.INFO)
     app.logger.info('Running on Heroku')
-    app.logger.info('-----------------')
 
-else:
+if MY_PLATFORM == 'LOCAL':
+    print('Running Local')
     import logging
     from logging import Formatter
     from logging.handlers import RotatingFileHandler
@@ -35,4 +40,3 @@ else:
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
     app.logger.info('Not running on Heroku')
-    app.logger.info('-----------------')
