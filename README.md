@@ -131,9 +131,9 @@ Basically - Supervisor starts Gunicorn who starts the fitboard app
 config: /etc/supervisor/conf.d/fitboard.conf
 
     [program:gunicorn]
-    command=/home/chris/Envs/fitboard/bin/gunicorn -w 4 -b 127.0.0.1:8000 main:app
-    directory=/home/chris/Projects/Fitboard
-    user=chris
+    command=/home/fitboard/.virtualenvs/Fitboard/bin/gunicorn -w 4 -b 127.0.0.1:8000 main:app
+    directory=/home/fitboard/fitboard
+    user=fitboard
     autostart=true
     autorestart=true
     redirect_stderr=True
