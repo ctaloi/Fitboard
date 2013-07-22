@@ -14,6 +14,11 @@ Fitboard allows you to visualize
 - Minutes Asleep
 - Sleep Efficiency
 - Times Awakened
+- Minutes Sedentary
+- Minutes Lightly Active
+- Minutes Fairly Active
+- Minutes Very Active
+
 
 And a multi point graph showing
 
