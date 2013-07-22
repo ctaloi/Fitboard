@@ -23,6 +23,7 @@ At anytime you can revoke Fitboard's <a href="http://www.fitbit.com/user/profile
 
 {% set timeseries = [
       ('1d', '1 Day'),
+      ('1w', '1 Week'),
       ('1m', '1 Month'),
       ('3m', '3 Months'),
       ('1y', '1 Year')] %}
@@ -32,12 +33,17 @@ At anytime you can revoke Fitboard's <a href="http://www.fitbit.com/user/profile
       ('calories', 'Calories'),
       ('distance', 'Distance'),
       ('floors', 'Floors'),
+      ('minutesSedentary', 'Minutes Sedentary'),
+      ('minutesLightlyActive', 'Minutes Lightly Active'),
+      ('minutesFairlyActive', 'Minutes Fairly Active'),
+      ('minutesVeryActive', 'Minutes Very Active'),
       ('activeScore', 'Active Score'),]
       %}
 
 
 {% set sleep_charts = [
       ('minutesAsleep', 'Minutes Asleep'),
+      ('minutesToFallAsleep', 'Minutes to Fall Asleep'),
       ('efficiency', 'Sleep Efficiency'),
       ('awakeningsCount', 'Times Awakened')]
       %}
