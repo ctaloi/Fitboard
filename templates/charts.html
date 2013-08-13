@@ -28,24 +28,24 @@ At anytime you can revoke Fitboard's <a href="http://www.fitbit.com/user/profile
       ('3m', '3 Months'),
       ('1y', '1 Year')] %}
 
-{% set individual_charts = [
+{% set col1_charts = [
       ('steps', 'Steps'),
       ('calories', 'Calories'),
       ('distance', 'Distance'),
       ('floors', 'Floors'),
-      ('minutesSedentary', 'Minutes Sedentary'),
-      ('minutesLightlyActive', 'Minutes Lightly Active'),
-      ('minutesFairlyActive', 'Minutes Fairly Active'),
-      ('minutesVeryActive', 'Minutes Very Active'),
       ('activeScore', 'Active Score'),]
       %}
 
 
-{% set sleep_charts = [
+{% set col2_charts = [
       ('minutesAsleep', 'Minutes Asleep'),
       ('minutesToFallAsleep', 'Minutes to Fall Asleep'),
       ('efficiency', 'Sleep Efficiency'),
-      ('awakeningsCount', 'Times Awakened')]
+      ('awakeningsCount', 'Times Awakened'),
+      ('minutesSedentary', 'Minutes Sedentary'),
+      ('minutesLightlyActive', 'Minutes Lightly Active'),
+      ('minutesFairlyActive', 'Minutes Fairly Active'),
+      ('minutesVeryActive', 'Minutes Very Active')]
       %}
 
 
@@ -57,7 +57,7 @@ At anytime you can revoke Fitboard's <a href="http://www.fitbit.com/user/profile
     <h2>{{ session.user_profile.user.displayName }}'s Fitbit Summary</h2>
     <ul>
       <li>Battery Level: {{ session.device_info.0.battery }}</li>
-      <li>Last Sync: {{ session.device_info.0.lastSyncTime }}</li>
+      <li>Last Sync: {{ session.device_info.0.lastSyncTime|naturaltime|capitalize }}</li>
       <li>Fitbit Type: {{ session.device_info.0.deviceVersion }}</li>
     </ul>
   </div>
@@ -74,47 +74,51 @@ At anytime you can revoke Fitboard's <a href="http://www.fitbit.com/user/profile
 
 <div class="row-fluid">
   <div class="span6">
-    <h3><i class="icon-user pull-left icon-muted icon-border"></i>Individual Graphs</h3>
-    {%- for chart, chart_name in individual_charts -%}
-    <h4>{{chart_name}}</h4>
+    <h4>Status</h4>
     <div class="btn-toolbar">
     <div class="btn-group">
-        {%- for period, disp_period in timeseries -%}
-        <a class="btn" href="panicboard://?url={{ url_for('get_activity', _external=True, user_id=session.fitbit_keys.0, resource=chart, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
-        {% endfor %}
+      <a class="btn btn-small" href="panicboard://?url={{ url_for('get_dashboard', _external=True, user_id=session.fitbit_keys.0)}}&panel=diy&sourceDisplayName=fitboard.me">Battery and Sync</a>
     </div>
     </div>
-{% endfor %}
-    </div>
+    <hr>
 
-  <div class="span6">
-    <h3><i class="icon-off pull-left icon-muted icon-border"></i>Sleep Graphs</h3>
-    {%- for chart, chart_name in sleep_charts -%}
-    <h4>{{chart_name}}</h4>
-    <div class="btn-toolbar">
-    <div class="btn-group">
-        {%- for period, disp_period in timeseries -%}
-        <a class="btn" href="panicboard://?url={{ url_for('get_activity', _external=True, user_id=session.fitbit_keys.0, resource=chart, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
-        {% endfor %}
-
-    </div>
-    </div>
-{% endfor %}
-  </div>
-
-  <div class="span6">
-    <h3><span class="icon-bar-chart pull-left icon-muted icon-border"></span> Group Graphs</h3>
     <h4>Activity Level</h4>
     <div class="btn-toolbar">
       <div class="btn-group">
         {%- for period, disp_period in timeseries -%}
-        <a class="btn" href="panicboard://?url={{ url_for('get_levelsummary', _external=True, user_id=session.fitbit_keys.0, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
+        <a class="btn btn-small" href="panicboard://?url={{ url_for('get_levelsummary', _external=True, user_id=session.fitbit_keys.0, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
         {% endfor %}
-      </div>
     </div>
+    </div>
+    <hr>
+
+    {%- for chart, chart_name in col1_charts -%}
+    <h4>{{chart_name}}</h4>
+    <div class="btn-toolbar">
+    <div class="btn-group">
+        {%- for period, disp_period in timeseries -%}
+        <a class="btn btn-small" href="panicboard://?url={{ url_for('get_activity', _external=True, user_id=session.fitbit_keys.0, resource=chart, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
+        {% endfor %}
+    </div>
+    </div>
+    <hr>
+{% endfor %}
+    </div>
+
+  <div class="span6">
+    {%- for chart, chart_name in col2_charts -%}
+    <h4>{{chart_name}}</h4>
+    <div class="btn-toolbar">
+    <div class="btn-group">
+        {%- for period, disp_period in timeseries -%}
+        <a class="btn btn-small" href="panicboard://?url={{ url_for('get_activity', _external=True, user_id=session.fitbit_keys.0, resource=chart, period=period)}}&panel=graph&sourceDisplayName=fitboard.me">{{ disp_period }}</a>
+        {% endfor %}
+
+    </div>
+    </div>
+    <hr>
+{% endfor %}
   </div>
-
-
   </div>
 
 {% endif %}

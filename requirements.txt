@@ -13,6 +13,7 @@ fitbit==0.0.2
 flask-heroku==0.1.4
 gunicorn==0.17.4
 httplib2==0.8
+humanize==0.5
 itsdangerous==0.21
 oauth2==1.5.211
 psycopg2==2.5.1

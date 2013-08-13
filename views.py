@@ -6,11 +6,15 @@ from random import choice
 from flask_oauth import OAuth
 from stathat import StatHat
 import os
+import humanize
+import dateutil.parser
 
 MY_STATHAT_USER = os.environ.get('STATHAT_USER')
 MY_CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
 MY_CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
 
+# Setup
+# ----------------------------
 oauth = OAuth()
 fitbit_app = oauth.remote_app(
     'fitbit',
@@ -23,11 +27,8 @@ fitbit_app = oauth.remote_app(
 )
 
 
-@app.route('/favicon.ico')
-def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'img/favicon.ico', mimetype='image/vnd.microsoft.icon')
-
+# Logging
+# ----------------------------
 
 def email_log(message):
     msg = Message("%s Notice Fitboard" % (message),
@@ -56,6 +57,14 @@ def stat_log(statistic):
         app.logger.info('push to stathat failed')
         pass
 
+
+# Routes
+# ----------------------------
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'img/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -90,6 +99,7 @@ def get_fitbit_app_token(token=None):
 
 @app.route('/login')
 def login():
+    """ Start login process """
     email_alert('NEW LOGIN')
     stat_log('Fitboard Login Counter')
     return fitbit_app.authorize(
@@ -99,6 +109,7 @@ def login():
 @app.route('/oauth_authorized')
 @fitbit_app.authorized_handler
 def oauth_authorized(resp):
+    """ Authorize using OAUTH """
     next_url = request.args.get('next') or url_for('charts')
     if resp is None:
         flash(u'You denied the request to sign in.')
@@ -124,7 +135,7 @@ def oauth_authorized(resp):
 
 @app.route('/u/<user_id>/drop')
 def drop_user(user_id):
-    """Drop user from databaase"""
+    """ Drop user from databaase """
     app.logger.info('delete,request to delete %r' % user_id)
 
     user = User.query.filter_by(user_id=user_id).first_or_404()
@@ -143,41 +154,26 @@ def drop_user(user_id):
 
 @app.route('/logout')
 def logout():
+    """ Logout pops session cookie """
     session.pop('fitbit_keys', None)
     session.pop('user_profile', None)
     return redirect(url_for('index'))
 
 
-def get_creds(user_id):
-    """Function takes user_id in and returns user_id, user_key, user_secret from db"""
-    creds = User.query.filter_by(user_id=user_id).first_or_404()
-    return creds
-
-
-def get_connector(user_id):
-    """Function takes user_id and returns variable to connect to fitbit from db"""
-    x = get_creds(user_id)
-
-    connector = fitbit.Fitbit(
-        consumer_key=MY_CONSUMER_KEY,
-        consumer_secret=MY_CONSUMER_SECRET,
-        user_key=x.user_key,
-        user_secret=x.user_secret)
-    return connector
-
-
-def get_device_info(user_id):
-    device_info = get_connector(user_id).get_devices()
-    return device_info
-
-
-def get_user_profile(user_id):
-    user_profile = get_connector(user_id).user_profile_get()
-    return user_profile
+@app.route('/dash/<user_id>/')
+@app.route('/dash/<user_id>')
+def get_dashboard(user_id):
+    """ Function to build a simple table showing various status """
+    name = get_user_profile(user_id)
+    battery = get_connector(user_id).get_devices()[0]['battery']
+    sync = get_connector(user_id).get_devices()[0]['lastSyncTime']
+    steps = get_activity(user_id, 'steps', period='1d', return_as='raw')[0]['value']
+    return render_template('dash.html', battery=battery, sync=sync, steps=steps, name=name)
 
 
 @app.route('/u/<user_id>/<resource>/<period>')
 def get_activity(user_id, resource, period='1w', return_as='json'):
+    """ Function to pull data from Fitbit API and return as json or raw specific to activities """
     app.logger.info('resource, %s, %s, %s, %s, %s' % (user_id, resource, period, return_as, request.remote_addr))
     stat_log('Fitboard Calls')
     ''' Use  API to return resource data '''
@@ -239,6 +235,7 @@ def get_activity(user_id, resource, period='1w', return_as='json'):
 
 @app.route('/u/summary/<user_id>/<period>')
 def get_levelsummary(user_id, period):
+    """ Function to build a four point graph summarizing activities """
 
     app.logger.info('summary, summary, %s, %s, %s' % (user_id, period, request.remote_addr))
 
@@ -304,9 +301,52 @@ def get_levelsummary(user_id, period):
     return jsonify(graph)
 
 
-def output_json(dp, resource, datasequence_color, graph_type):
-    ''' Outputs a json object for a statusboard graph '''
+# Filters
+# ----------------------------
 
+@app.template_filter()
+def naturaltime(datetime):
+    """Filter used to convert Fitbit API's iso formatted text into
+    an easy to read humanized format"""
+
+    a = humanize.naturalday(dateutil.parser.parse(datetime))
+    return a
+
+
+def get_creds(user_id):
+    """Function takes user_id in and returns user_id, user_key, user_secret from db"""
+    creds = User.query.filter_by(user_id=user_id).first_or_404()
+    return creds
+
+
+def get_connector(user_id):
+    """Function takes user_id and returns variable to connect to fitbit from db"""
+    x = get_creds(user_id)
+
+    connector = fitbit.Fitbit(
+        consumer_key=MY_CONSUMER_KEY,
+        consumer_secret=MY_CONSUMER_SECRET,
+        user_key=x.user_key,
+        user_secret=x.user_secret)
+    return connector
+
+
+def get_device_info(user_id):
+    """ Function used to return device info
+        https://wiki.fitbit.com/display/API/API-Get-Devices """
+    device_info = get_connector(user_id).get_devices()
+    return device_info
+
+
+def get_user_profile(user_id):
+    """ Function to return user profile
+        https://wiki.fitbit.com/display/API/API-Get-User-Info """
+    user_profile = get_connector(user_id).user_profile_get()
+    return user_profile
+
+
+def output_json(dp, resource, datasequence_color, graph_type):
+    """ Return a properly formatted JSON file for Statusboard """
     graph_title = ''
     datapoints = []
     for x in dp:

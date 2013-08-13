@@ -1,0 +1,28 @@
+<html>
+<head>
+  <!-- <link href="{{ url_for('static', filename='sb_tables.css') }}" rel="stylesheet"> -->
+
+<table id="dashboard">
+
+  <tr>
+    <td colspan="2">Fitbit Status</td>
+    <td>{{ name }}</td>
+  </tr>
+
+  <tr>
+    <td class="noresize">Battery</td>
+    <td>{{ battery }}</td>
+  </tr>
+
+  <tr>
+    <td class="noresize">Last Sync</td>
+    <td>{{ sync|naturaltime|capitalize }}</td>
+  </tr>
+
+  <tr>
+    <td class="noresize">Steps Today</td>
+    <td>{{ steps }}</td>
+  </tr>
+
+</table>
+</html>
