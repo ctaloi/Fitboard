@@ -1,27 +1,27 @@
 <html>
 <head>
-  <!-- <link href="{{ url_for('static', filename='sb_tables.css') }}" rel="stylesheet"> -->
 
-<table id="dashboard">
+  {# <link href="{{ url_for('static', filename='sb_tables.css') }}" rel="stylesheet"> #}
+
+<table id="dashboard" border="0">
 
   <tr>
-    <td colspan="2">Fitbit Status</td>
-    <td>{{ name }}</td>
+    <td colspan="2">{{ profile.user.displayName }}'s Fitbit {{ device.0.deviceVersion }}</td>
   </tr>
 
   <tr>
     <td class="noresize">Battery</td>
-    <td>{{ battery }}</td>
+    <td>{{ device.0.battery }}</td>
   </tr>
 
   <tr>
     <td class="noresize">Last Sync</td>
-    <td>{{ sync|naturaltime|capitalize }}</td>
+    <td>{{ device.0.lastSyncTime|natural_time|capitalize }}</td>
   </tr>
 
   <tr>
     <td class="noresize">Steps Today</td>
-    <td>{{ steps }}</td>
+    <td>{{ steps|natural_number }}</td>
   </tr>
 
 </table>

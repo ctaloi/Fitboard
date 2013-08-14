@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fitboard Debug</title>
+</head>
+<body>
+
+<dl>
+    {% for key, value in user.user.iteritems() %}
+        <dt>{{ key|e }}</dt>
+        <dt>{{ value|e }}</dt>
+    {% endfor %}
+</dl>
+
+<hr>
+
+<dl>
+    {% for device in devices %}
+        <dt>{{ devices.0 }}</dt>
+    {% endfor %}
+</dl>
+</body>
+</html>

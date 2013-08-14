@@ -160,15 +160,27 @@ def logout():
     return redirect(url_for('index'))
 
 
+@app.route('/debug/<user_id>')
+def dev_dump(user_id):
+    """ print info about a user for debugging, only enabled when debug is True """
+    if app.debug:
+        print "Running in dev mode, enabling user debugging"
+        user = get_user_profile(user_id)
+        devices = get_device_info(user_id)
+        return render_template('debug.html', user=user, devices=devices)
+    else:
+        print "Not running in dev mode, therefore redir to index"
+        return render_template('intro.html')
+
+
 @app.route('/dash/<user_id>/')
 @app.route('/dash/<user_id>')
 def get_dashboard(user_id):
     """ Function to build a simple table showing various status """
-    name = get_user_profile(user_id)
-    battery = get_connector(user_id).get_devices()[0]['battery']
-    sync = get_connector(user_id).get_devices()[0]['lastSyncTime']
+    profile = get_user_profile(user_id)
+    device = get_device_info(user_id)
     steps = get_activity(user_id, 'steps', period='1d', return_as='raw')[0]['value']
-    return render_template('dash.html', battery=battery, sync=sync, steps=steps, name=name)
+    return render_template('dash.html', device=device, steps=steps, profile=profile)
 
 
 @app.route('/u/<user_id>/<resource>/<period>')
@@ -305,13 +317,21 @@ def get_levelsummary(user_id, period):
 # ----------------------------
 
 @app.template_filter()
-def naturaltime(datetime):
+def natural_time(datetime):
     """Filter used to convert Fitbit API's iso formatted text into
     an easy to read humanized format"""
-
-    a = humanize.naturalday(dateutil.parser.parse(datetime))
+    a = humanize.naturaltime(dateutil.parser.parse(datetime))
     return a
 
+@app.template_filter()
+def natural_number(number):
+    """ Filter used to present integers cleanly """
+    a = humanize.intcomma(number)
+    return a
+
+
+# Building Blocks
+# ----------------------------
 
 def get_creds(user_id):
     """Function takes user_id in and returns user_id, user_key, user_secret from db"""
@@ -343,6 +363,15 @@ def get_user_profile(user_id):
         https://wiki.fitbit.com/display/API/API-Get-User-Info """
     user_profile = get_connector(user_id).user_profile_get()
     return user_profile
+
+
+def get_dail_goals(user_id):
+    """ Function to return daily goals
+    https://wiki.fitbit.com/display/API/API-Get-Activity-Daily-Goals
+    Not yet implemented
+    """
+    # user_goals = get_connector(user_id).get_activity_goals()
+    pass
 
 
 def output_json(dp, resource, datasequence_color, graph_type):
