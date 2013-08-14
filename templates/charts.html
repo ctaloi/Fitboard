@@ -57,7 +57,7 @@ At anytime you can revoke Fitboard's <a href="http://www.fitbit.com/user/profile
     <h2>{{ session.user_profile.user.displayName }}'s Fitbit Summary</h2>
     <ul>
       <li>Battery Level: {{ session.device_info.0.battery }}</li>
-      <li>Last Sync: {{ session.device_info.0.lastSyncTime|naturaltime|capitalize }}</li>
+      <li>Last Sync: {{ session.device_info.0.lastSyncTime|natural_time|capitalize }}</li>
       <li>Fitbit Type: {{ session.device_info.0.deviceVersion }}</li>
     </ul>
   </div>
