@@ -66,6 +66,7 @@ def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'img/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
+
 @app.errorhandler(404)
 def page_not_found(e):
     app.logger.info('404')
@@ -119,7 +120,8 @@ def oauth_authorized(resp):
     user_key = resp['oauth_token']
     user_secret = resp['oauth_token_secret']
 
-    session['fitbit_keys'] = (user_id, user_key, user_secret)  # add session cookie
+    session['fitbit_keys'] = (
+        user_id, user_key, user_secret)  # add session cookie
     active_user = User(user_id, user_key, user_secret)
     check_user = User.query.filter_by(user_id=user_id).first()
 
@@ -179,14 +181,16 @@ def get_dashboard(user_id):
     """ Function to build a simple table showing various status """
     profile = get_user_profile(user_id)
     device = get_device_info(user_id)
-    steps = get_activity(user_id, 'steps', period='1d', return_as='raw')[0]['value']
+    steps = get_activity(
+        user_id, 'steps', period='1d', return_as='raw')[0]['value']
     return render_template('dash.html', device=device, steps=steps, profile=profile)
 
 
 @app.route('/u/<user_id>/<resource>/<period>')
 def get_activity(user_id, resource, period='1w', return_as='json'):
     """ Function to pull data from Fitbit API and return as json or raw specific to activities """
-    app.logger.info('resource, %s, %s, %s, %s, %s' % (user_id, resource, period, return_as, request.remote_addr))
+    app.logger.info('resource, %s, %s, %s, %s, %s' %
+                    (user_id, resource, period, return_as, request.remote_addr))
     stat_log('Fitboard Calls')
     ''' Use  API to return resource data '''
 
@@ -237,7 +241,8 @@ def get_activity(user_id, resource, period='1w', return_as='json'):
                     slash_resource = 'sleep/' + resource
                     dash_resource = 'sleep-' + resource
 
-    the_data = get_connector(user_id).time_series(slash_resource, base_date='today', period=period)[dash_resource]
+    the_data = get_connector(user_id).time_series(
+        slash_resource, base_date='today', period=period)[dash_resource]
 
     if return_as == 'raw':
         return the_data
@@ -249,17 +254,22 @@ def get_activity(user_id, resource, period='1w', return_as='json'):
 def get_levelsummary(user_id, period):
     """ Function to build a four point graph summarizing activities """
 
-    app.logger.info('summary, summary, %s, %s, %s' % (user_id, period, request.remote_addr))
+    app.logger.info('summary, summary, %s, %s, %s' %
+                    (user_id, period, request.remote_addr))
 
     if period in ('1d', '1w'):
         g_type = 'bar'
     else:
         g_type = 'line'
 
-    minutesSedentary = get_activity(user_id, 'minutesSedentary', period=period, return_as='raw')
-    minutesLightlyActive = get_activity(user_id, 'minutesLightlyActive', period=period, return_as='raw')
-    minutesFairlyActive = get_activity(user_id, 'minutesFairlyActive', period=period, return_as='raw')
-    minutesVeryActive = get_activity(user_id, 'minutesVeryActive', period=period, return_as='raw')
+    minutesSedentary = get_activity(
+        user_id, 'minutesSedentary', period=period, return_as='raw')
+    minutesLightlyActive = get_activity(
+        user_id, 'minutesLightlyActive', period=period, return_as='raw')
+    minutesFairlyActive = get_activity(
+        user_id, 'minutesFairlyActive', period=period, return_as='raw')
+    minutesVeryActive = get_activity(
+        user_id, 'minutesVeryActive', period=period, return_as='raw')
 
     datasequences = []
 
@@ -269,7 +279,7 @@ def get_levelsummary(user_id, period):
     mv = []
 
     for x in minutesSedentary:
-        ms.append({'title':  x['dateTime'], 'value': float(x['value'])-480})
+        ms.append({'title':  x['dateTime'], 'value': float(x['value']) - 480})
     for x in minutesLightlyActive:
         ml.append({'title':  x['dateTime'], 'value': float(x['value'])})
     for x in minutesFairlyActive:
@@ -322,6 +332,7 @@ def natural_time(datetime):
     an easy to read humanized format"""
     a = humanize.naturaltime(dateutil.parser.parse(datetime))
     return a
+
 
 @app.template_filter()
 def natural_number(number):
@@ -379,7 +390,8 @@ def output_json(dp, resource, datasequence_color, graph_type):
     graph_title = ''
     datapoints = []
     for x in dp:
-        datapoints.append({'title':  x['dateTime'], 'value': float(x['value'])})
+        datapoints.append(
+            {'title':  x['dateTime'], 'value': float(x['value'])})
     datasequences = []
     datasequences.append({
         "title":        resource,
