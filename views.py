@@ -404,7 +404,7 @@ def output_json(dp, resource, datasequence_color, graph_type):
             'title':                graph_title,
             'yAxis':                {'hide': False},
             'xAxis':                {'hide': False},
-            'refreshEveryNSeconds': 240,
+            'refreshEveryNSeconds': 600,
             'type':                 graph_type,
             'datasequences':        datasequences,
         }
