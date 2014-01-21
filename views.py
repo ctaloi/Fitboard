@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, session, url_for, request, j
 from app import app, db, mail, Message
 from models import User
 from random import choice
-from flask_oauth import OAuth
+from flask_oauthlib.client import OAuth
 from stathat import StatHat
 import os
 import humanize
@@ -101,7 +101,7 @@ def get_fitbit_app_token(token=None):
 @app.route('/login')
 def login():
     """ Start login process """
-    email_alert('NEW LOGIN')
+    # email_alert('NEW LOGIN')
     stat_log('Fitboard Login Counter')
     return fitbit_app.authorize(
         callback=url_for('oauth_authorized', next=request.args.get('next') or request.referrer or None))
