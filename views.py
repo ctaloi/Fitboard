@@ -314,7 +314,7 @@ def get_levelsummary(user_id, period):
     graph = {
         "graph":    {
             'title':                'Activity Level (MINUTES)',
-            'refreshEveryNSeconds':  240,
+            'refreshEveryNSeconds':  600,
             'type':                 g_type,
             'datasequences':        datasequences,
         }
