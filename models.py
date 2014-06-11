@@ -1,6 +1,7 @@
 from app import db
 
-# Add DB model
+# Add database model to store user_id, user_key and user_secret
+# Used for accessing API
 
 
 class User(db.Model):

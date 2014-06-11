@@ -2,9 +2,7 @@ import os
 
 DEBUG = True
 
-# ---- choose DB ----
 # if sqlite
-
 # basedir = os.path.abspath(os.path.dirname(__file__))
 # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 
@@ -17,7 +15,8 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # flask-toolbar config
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-# mail config
+# Mail configuration
+# Configured in ENV vars
 MAIL_SERVER = "smtp.gmail.com"
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True

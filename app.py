@@ -22,7 +22,6 @@ MY_PLATFORM = os.environ.get('PLATFORM')
 print(MY_PLATFORM)
 
 if MY_PLATFORM == 'HEROKU':
-    print('Running on Heroku')
     import logging
     stream_handler = logging.StreamHandler()
     app.logger.addHandler(stream_handler)
@@ -30,7 +29,6 @@ if MY_PLATFORM == 'HEROKU':
     app.logger.info('Running on Heroku')
 
 if MY_PLATFORM == 'LOCAL':
-    print('Running Local')
     import logging
     from logging import Formatter
     from logging.handlers import RotatingFileHandler
