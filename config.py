@@ -1,6 +1,6 @@
 import os
 
-DEBUG = True
+DEBUG = False
 
 # if sqlite
 # basedir = os.path.abspath(os.path.dirname(__file__))
