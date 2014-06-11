@@ -4,6 +4,7 @@ from app import app, db, mail, Message
 from models import User
 from random import choice
 from flask_oauthlib.client import OAuth
+# from flask_oauth import OAuth
 from stathat import StatHat
 import os
 import humanize
@@ -29,7 +30,6 @@ fitbit_app = oauth.remote_app(
 
 # Logging
 # ----------------------------
-
 def email_log(message):
     msg = Message("%s Notice Fitboard" % (message),
                   recipients=["ctaloi@gmail.com"])
@@ -102,8 +102,6 @@ def get_fitbit_app_token(token=None):
 def login():
     """ Start login process
     """
-    # email_alert('NEW LOGIN')
-    stat_log('Fitboard Login Counter')
     return fitbit_app.authorize(
         callback=url_for('oauth_authorized', next=request.args.get('next') or request.referrer or None))
 
@@ -116,8 +114,8 @@ def oauth_authorized(resp):
     if resp is None:
         flash(u'You denied the request to sign in.')
         return redirect(next_url)
-    # print request
-    # print resp
+    print request
+    print resp
 
     user_id = resp['encoded_user_id']
     user_key = resp['oauth_token']
@@ -389,9 +387,8 @@ def dev_dump(user_id):
         app.logger.info('running in dev mode, debugging enabled')
         app.logger.info(user_id)
         user = get_user_profile(user_id)
-        # devices = get_device_info(user_id)
-        return user
-        # return render_template('debug.html', devices=devices)
+        devices = get_device_info(user_id)
+        return render_template('debug.html', user=user, devices=devices)
     else:
         print "Not running in dev mode, therefore redir to index"
         return render_template('intro.html')

@@ -1,8 +1,6 @@
 Flask==0.10.1
 Flask-DebugToolbar==0.9.0
 Flask-Mail==0.9.0
-Flask-OAuth==0.12
-Flask-OAuthlib==0.4.2
 Flask-SQLAlchemy==1.0
 Jinja2==2.7.2
 MarkupSafe==0.18
@@ -12,15 +10,11 @@ blinker==1.3
 fitbit==0.1.0
 flask-heroku==0.1.8
 gunicorn==18.0
-httplib2==0.8
 humanize==0.5
 itsdangerous==0.23
-oauth2==1.5.211
-oauthlib==0.6.3
 psycopg2==2.5.2
 python-dateutil==2.2
 requests==2.3.0
-requests-oauthlib==0.4.1
 six==1.7.2
 -e git://github.com/kennethreitz/stathat.py.git@c34ede6d5c8e3c42bbc4894b355860c40967beb0#egg=stathat-master
 wsgiref==0.1.2
