@@ -19,7 +19,6 @@ Fitboard allows you to visualize
 - Minutes Fairly Active
 - Minutes Very Active
 
-
 And a multi point graph showing
 
 - Minutes Sedentary
