@@ -12,6 +12,7 @@ import dateutil.parser
 MY_STATHAT_USER = os.environ.get('STATHAT_USER')
 MY_CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
 MY_CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
+MY_EMAIL_ADDRESS = os.environ.get('EMAIL_USER')
 
 # Setup
 # ----------------------------
@@ -31,7 +32,7 @@ fitbit_app = oauth.remote_app(
 # ----------------------------
 def email_log(message):
     msg = Message("%s Notice Fitboard" % (message),
-                  recipients=["ctaloi@gmail.com"])
+                  recipients=[MY_EMAIL_ADDRESS])
     msg.body = "NOTICE %s \n Logile Attached \n" % (message)
     with app.open_resource("fitboard.log") as fp:
         msg.attach("fitboard.log", "text/plain", fp.read())
