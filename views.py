@@ -4,7 +4,6 @@ from app import app, db, mail, Message
 from models import User
 from random import choice
 from flask_oauthlib.client import OAuth
-# from flask_oauth import OAuth
 from stathat import StatHat
 import os
 import humanize
@@ -348,21 +347,12 @@ def get_creds(user_id):
 def get_connector(user_id):
     """Function takes user_id and returns variable to connect to fitbit from db"""
     x = get_creds(user_id)
-    # print x
 
     connector = fitbit.Fitbit(
-        # consumer_key=MY_CONSUMER_KEY,
-        # consumer_secret=MY_CONSUMER_SECRET,
-        # 'bcf9bd384513460395989025a2ede86a',
-        # 'fd650ddb21c542c0a3ee3483ddda5727',
         MY_CONSUMER_KEY,
         MY_CONSUMER_SECRET,
         resource_owner_key=x.user_key,
         resource_owner_secret=x.user_secret)
-        # resource_owner_key='bbcd07550f22360679689f69656c6583',
-        # resource_owner_secret='548b251de5cb42675a6471bc0fb68536')
-        # resource_owner_key=x.user_key,
-        # resource_owner_secret=x.user_secret)
     return connector
 
 
