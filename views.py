@@ -19,9 +19,9 @@ oauth = OAuth()
 fitbit_app = oauth.remote_app(
     'fitbit',
     base_url='https://api.fitbit.com',
-    request_token_url='http://api.fitbit.com/oauth/request_token',
-    access_token_url='http://api.fitbit.com/oauth/access_token',
-    authorize_url='http://www.fitbit.com/oauth/authorize',
+    request_token_url='https://api.fitbit.com/oauth/request_token',
+    access_token_url='https://api.fitbit.com/oauth/access_token',
+    authorize_url='https://www.fitbit.com/oauth/authorize',
     consumer_key=MY_CONSUMER_KEY,
     consumer_secret=MY_CONSUMER_SECRET
 )
@@ -100,7 +100,8 @@ def get_fitbit_app_token(token=None):
 
 @app.route('/login')
 def login():
-    """ Start login process """
+    """ Start login process
+    """
     # email_alert('NEW LOGIN')
     stat_log('Fitboard Login Counter')
     return fitbit_app.authorize(
@@ -115,6 +116,8 @@ def oauth_authorized(resp):
     if resp is None:
         flash(u'You denied the request to sign in.')
         return redirect(next_url)
+    # print request
+    # print resp
 
     user_id = resp['encoded_user_id']
     user_key = resp['oauth_token']
@@ -162,19 +165,6 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/debug/<user_id>')
-def dev_dump(user_id):
-    """ print info about a user for debugging, only enabled when debug is True """
-    if app.debug:
-        print "Running in dev mode, enabling user debugging"
-        user = get_user_profile(user_id)
-        devices = get_device_info(user_id)
-        return render_template('debug.html', user=user, devices=devices)
-    else:
-        print "Not running in dev mode, therefore redir to index"
-        return render_template('intro.html')
-
-
 @app.route('/dash/<user_id>/')
 @app.route('/dash/<user_id>')
 def get_dashboard(user_id):
@@ -189,6 +179,7 @@ def get_dashboard(user_id):
 @app.route('/u/<user_id>/<resource>/<period>')
 def get_activity(user_id, resource, period='1w', return_as='json'):
     """ Function to pull data from Fitbit API and return as json or raw specific to activities """
+    global dash_resource
     app.logger.info('resource, %s, %s, %s, %s, %s' %
                     (user_id, resource, period, return_as, request.remote_addr))
     stat_log('Fitboard Calls')
@@ -225,8 +216,8 @@ def get_activity(user_id, resource, period='1w', return_as='json'):
                     'minutesVeryActive',
                     'activeScore',
                     'activityCalories'):
-                    slash_resource = 'activities/' + resource
-                    dash_resource = 'activities-' + resource
+        slash_resource = 'activities/' + resource
+        dash_resource = 'activities-' + resource
 
     # Sleep Data
     if resource in ('startTime',
@@ -238,8 +229,14 @@ def get_activity(user_id, resource, period='1w', return_as='json'):
                     'minutesToFallAsleep',
                     'minutesAfterWakeup',
                     'efficiency'):
-                    slash_resource = 'sleep/' + resource
-                    dash_resource = 'sleep-' + resource
+        slash_resource = 'sleep/' + resource
+        dash_resource = 'sleep-' + resource
+
+    if resource in ('weight',
+                    'bmi',
+                    'fat'):
+        slash_resource = 'body/' + resource
+        dash_resource = 'body-' + resource
 
     the_data = get_connector(user_id).time_series(
         slash_resource, base_date='today', period=period)[dash_resource]
@@ -279,44 +276,44 @@ def get_levelsummary(user_id, period):
     mv = []
 
     for x in minutesSedentary:
-        ms.append({'title':  x['dateTime'], 'value': float(x['value']) - 480})
+        ms.append({'title': x['dateTime'], 'value': float(x['value']) - 480})
     for x in minutesLightlyActive:
-        ml.append({'title':  x['dateTime'], 'value': float(x['value'])})
+        ml.append({'title': x['dateTime'], 'value': float(x['value'])})
     for x in minutesFairlyActive:
-        mf.append({'title':  x['dateTime'], 'value': float(x['value'])})
+        mf.append({'title': x['dateTime'], 'value': float(x['value'])})
     for x in minutesVeryActive:
-        mv.append({'title':  x['dateTime'], 'value': float(x['value'])})
+        mv.append({'title': x['dateTime'], 'value': float(x['value'])})
 
     datasequences.append({
-        "title":        'Sedentary',
-        "color":        'red',
-        "datapoints":   ms,
+        "title": 'Sedentary',
+        "color": 'red',
+        "datapoints": ms,
     })
 
     datasequences.append({
-        "title":        'LightlyActive',
-        "color":        'orange',
-        "datapoints":   ml,
+        "title": 'LightlyActive',
+        "color": 'orange',
+        "datapoints": ml,
     })
 
     datasequences.append({
-        "title":        'FairlyActive',
-        "color":        'blue',
-        "datapoints":   mf,
+        "title": 'FairlyActive',
+        "color": 'blue',
+        "datapoints": mf,
     })
 
     datasequences.append({
-        "title":        'VeryActive',
-        "color":        'green',
-        "datapoints":   mv,
+        "title": 'VeryActive',
+        "color": 'green',
+        "datapoints": mv,
     })
 
     graph = {
-        "graph":    {
-            'title':                'Activity Level (MINUTES)',
-            'refreshEveryNSeconds':  600,
-            'type':                 g_type,
-            'datasequences':        datasequences,
+        "graph": {
+            'title': 'Activity Level (MINUTES)',
+            'refreshEveryNSeconds': 600,
+            'type': g_type,
+            'datasequences': datasequences,
         }
     }
 
@@ -353,12 +350,21 @@ def get_creds(user_id):
 def get_connector(user_id):
     """Function takes user_id and returns variable to connect to fitbit from db"""
     x = get_creds(user_id)
+    # print x
 
     connector = fitbit.Fitbit(
-        consumer_key=MY_CONSUMER_KEY,
-        consumer_secret=MY_CONSUMER_SECRET,
-        user_key=x.user_key,
-        user_secret=x.user_secret)
+        # consumer_key=MY_CONSUMER_KEY,
+        # consumer_secret=MY_CONSUMER_SECRET,
+        # 'bcf9bd384513460395989025a2ede86a',
+        # 'fd650ddb21c542c0a3ee3483ddda5727',
+        MY_CONSUMER_KEY,
+        MY_CONSUMER_SECRET,
+        resource_owner_key=x.user_key,
+        resource_owner_secret=x.user_secret)
+        # resource_owner_key='bbcd07550f22360679689f69656c6583',
+        # resource_owner_secret='548b251de5cb42675a6471bc0fb68536')
+        # resource_owner_key=x.user_key,
+        # resource_owner_secret=x.user_secret)
     return connector
 
 
@@ -376,7 +382,22 @@ def get_user_profile(user_id):
     return user_profile
 
 
-def get_dail_goals(user_id):
+@app.route('/debug/<user_id>')
+def dev_dump(user_id):
+    """ print info about a user for debugging, only enabled when debug is True """
+    if app.debug:
+        app.logger.info('running in dev mode, debugging enabled')
+        app.logger.info(user_id)
+        user = get_user_profile(user_id)
+        # devices = get_device_info(user_id)
+        return user
+        # return render_template('debug.html', devices=devices)
+    else:
+        print "Not running in dev mode, therefore redir to index"
+        return render_template('intro.html')
+
+
+def get_daily_goals(user_id):
     """ Function to return daily goals
     https://wiki.fitbit.com/display/API/API-Get-Activity-Daily-Goals
     Not yet implemented
@@ -391,23 +412,21 @@ def output_json(dp, resource, datasequence_color, graph_type):
     datapoints = []
     for x in dp:
         datapoints.append(
-            {'title':  x['dateTime'], 'value': float(x['value'])})
+            {'title': x['dateTime'], 'value': float(x['value'])})
     datasequences = []
     datasequences.append({
-        "title":        resource,
+        "title": resource,
         # "color":        datasequence_color,
-        "datapoints":   datapoints,
+        "datapoints": datapoints,
     })
 
-    graph = {
-        "graph":    {
-            'title':                graph_title,
-            'yAxis':                {'hide': False},
-            'xAxis':                {'hide': False},
-            'refreshEveryNSeconds': 600,
-            'type':                 graph_type,
-            'datasequences':        datasequences,
-        }
-    }
+    graph = dict(graph={
+        'title': graph_title,
+        'yAxis': {'hide': False},
+        'xAxis': {'hide': False},
+        'refreshEveryNSeconds': 600,
+        'type': graph_type,
+        'datasequences': datasequences,
+    })
 
     return graph
